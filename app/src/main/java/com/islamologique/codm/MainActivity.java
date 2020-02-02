@@ -1,5 +1,6 @@
 package com.islamologique.codm;
 
+import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,7 +17,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,8 +42,10 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar songPrgs;
     private Handler hdlr = new Handler();
     private ListView listMusic;
-    private String listNoms[] = getAllRawResources();
+    private String listNoms[];
+
     private int playindex = 0;
+
 
     ListView simpleList;
     String countryList[] = {"India", "China", "australia", "Portugle", "America", "NewZealand"};
@@ -56,9 +62,18 @@ public class MainActivity extends AppCompatActivity {
             hdlr.postDelayed(this, 100);
         }
     };
-
+    private Map<String,Integer> nomMusic=new HashMap<String,Integer>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        mPlayer=new MediaPlayer();
+        try {
+            listNoms = getAssets().list("music");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        nomMusic.put("3azzy endo stylo",R.raw.a1);
+        nomMusic.put("Don Bigg",R.raw.a2);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //variable lecteur
@@ -174,11 +189,48 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    private void play() {
-        Uri mp3Uni = Uri.parse("android.resource://" + getPackageName() + "/raw/" + listNoms[playindex]);
-        mPlayer = MediaPlayer.create(this, mp3Uni);
+    public void play() {
+
         Toast.makeText(MainActivity.this, listNoms[playindex], Toast.LENGTH_SHORT).show();
-        songName.setText(listNoms[playindex]);
+        try {
+            mPlayer=new MediaPlayer();
+            AssetFileDescriptor descriptor = getAssets().openFd("music/"+listNoms[playindex]);
+            mPlayer.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
+            descriptor.close();
+            mPlayer.prepare();
+            mPlayer.start();
+            eTime = mPlayer.getDuration();
+            sTime = mPlayer.getCurrentPosition();
+            if (oTime == 0) {
+                songPrgs.setMax(eTime);
+                oTime = 1;
+            }
+            songName.setText(listNoms[playindex]);
+            songTime.setText(String.format("%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(eTime),
+                    TimeUnit.MILLISECONDS.toSeconds(eTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(eTime))));
+            startTime.setText(String.format("%d min, %d sec", TimeUnit.MILLISECONDS.toMinutes(sTime),
+                    TimeUnit.MILLISECONDS.toSeconds(sTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(sTime))));
+            songPrgs.setProgress(sTime);
+            hdlr.postDelayed(UpdateSongTime, 100);
+            pausebtn.setEnabled(true);
+            playbtn.setEnabled(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void play_old() {
+        String name="Dizzy Dros.mp3";
+        try {
+            AssetFileDescriptor afd = getAssets().openFd(name);
+            mPlayer.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+        } catch (IOException e) {
+            //
+        }
+        //Uri mp3Uni = Uri.parse("android.resource://" + getPackageName() + "/raw/" + listNoms[playindex]);
+        //mPlayer = MediaPlayer.create(this, mp3Uni);
+        Toast.makeText(MainActivity.this, listNoms[playindex], Toast.LENGTH_SHORT).show();
+        songName.setText(name);
         mPlayer.start();
         eTime = mPlayer.getDuration();
         sTime = mPlayer.getCurrentPosition();
