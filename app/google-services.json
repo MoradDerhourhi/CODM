@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1023148935618",
+    "firebase_url": "https://codm-ff019.firebaseio.com",
+    "project_id": "codm-ff019",
+    "storage_bucket": "codm-ff019.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023148935618:android:c0a4b8dcc317b7ee8d2e5b",
+        "android_client_info": {
+          "package_name": "com.islamologique.codm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023148935618-8135ra6aln7ervkud6gm1eq0fh52vhr9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.islamologique.codm",
+            "certificate_hash": "48ee034d5dd9fb747d3a2a4100c5db923c00f142"
+          }
+        },
+        {
+          "client_id": "1023148935618-q8hb21lnecb8agp9tmi5imlgaliqjjvj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBfcy5N2OEW-KzbcjFwRCw9KwlhRjbKQgI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023148935618-q8hb21lnecb8agp9tmi5imlgaliqjjvj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
